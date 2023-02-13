@@ -1,0 +1,56 @@
+﻿@using Blazored.LocalStorage
+@using System.Net.Http;
+@using Web.Core;
+
+@page "/user"
+
+<html>
+    <body>
+        <h1>Introduce tus datos de usuario (Intratime)</h1>
+        <p>Nombre de usuario: <input type="text" /></p>
+        <p>Contraseña: <input type="password" /></p>
+        <button @onclick=TryLoginUser>CONFIRMAR</button>
+        <p>@signedInText</p>
+    </body>
+</html>
+
+@code{
+    [Parameter]
+    public string? signedInText { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadSignedInText();
+        StateHasChanged();
+    }
+
+    private Task LoadSignedInText()
+    {
+        signedInText = "Actualmente no tienes la sesión iniciada.";
+        return Task.CompletedTask;
+    }
+
+    public async void TryLoginUser()
+    {
+        var content = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("user", "username"),
+            new KeyValuePair<string, string>("pin", "password")
+        });
+
+        try
+        {
+            var response = await Clients.IntratimeClient.GetAsync("https://newapi.intratime.es/api/user/my-profile");
+            if (response.IsSuccessStatusCode)
+            {
+                var a = 2;
+            }
+            var b = 2;
+        }
+        catch (Exception ex)
+        {
+            var c = 2;
+        }
+        
+    }
+}

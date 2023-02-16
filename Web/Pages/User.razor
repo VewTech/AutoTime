@@ -1,56 +1,47 @@
-﻿@using Blazored.LocalStorage
-@using System.Net.Http;
-@using Web.Core;
+﻿ @using Library
 
 @page "/user"
 
-<html>
-    <body>
-        <h1>Introduce tus datos de usuario (Intratime)</h1>
-        <p>Nombre de usuario: <input type="text" /></p>
-        <p>Contraseña: <input type="password" /></p>
-        <button @onclick=TryLoginUser>CONFIRMAR</button>
-        <p>@signedInText</p>
-    </body>
-</html>
+<h3>Usuario</h3>
 
-@code{
-    [Parameter]
-    public string? signedInText { get; set; }
+<p>Utiliza tus credenciales de intratime para iniciar sesión en el servicio</p>
 
-    protected override async Task OnInitializedAsync()
+Nombre de usuario (correo): <input @bind="_newUsername"/><br />
+Contraseña: <input type="password" @bind="_newPassword" />
+<button @onclick="OnUserLogin">CONFIRMAR</button>
+
+Actualmente has iniciado sesión como @_cachedUsername
+
+@code {
+    // The data the user interacts with in the form
+    private string _newUsername = "";
+    private string _newPassword = "";
+
+    // The data saved in the browser caché
+    private string _cachedUsername = "";
+    private string _cachedPassword = "";
+
+    // When the page loads, retrieve data from LocalStorageService
+    protected async override void OnInitialized()
     {
-        await LoadSignedInText();
-        StateHasChanged();
+        _cachedUsername = await LocalStorageService.GetItemAsStringAsync("username");
+        _cachedPassword = await LocalStorageService.GetItemAsStringAsync("password");
     }
 
-    private Task LoadSignedInText()
-    {
-        signedInText = "Actualmente no tienes la sesión iniciada.";
-        return Task.CompletedTask;
-    }
-
-    public async void TryLoginUser()
+    // When the user tries to login, check credentials and save to LocalStorageService
+    private async void OnUserLogin()
     {
         var content = new FormUrlEncodedContent(new[]
         {
-            new KeyValuePair<string, string>("user", "username"),
-            new KeyValuePair<string, string>("pin", "password")
+            new KeyValuePair<string, string>("user", _newUsername),
+            new KeyValuePair<string, string>("pin", _newPassword)
         });
-
-        try
+        var response = await Clients.IntratimeMiddlewareClient.PostAsync("user/login", content);
+        if (response.IsSuccessStatusCode)
         {
-            var response = await Clients.IntratimeClient.GetAsync("https://newapi.intratime.es/api/user/my-profile");
-            if (response.IsSuccessStatusCode)
-            {
-                var a = 2;
-            }
-            var b = 2;
+            await LocalStorageService.SetItemAsStringAsync("username", _newUsername);
+            await LocalStorageService.SetItemAsStringAsync("password", _newPassword);
+            _cachedUsername = _newUsername;
         }
-        catch (Exception ex)
-        {
-            var c = 2;
-        }
-        
     }
 }

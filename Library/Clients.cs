@@ -9,7 +9,7 @@
 
         public static HttpClient IntratimeMiddlewareClient = new()
         {
-            BaseAddress = new Uri("https://www.whatever.com/")
+            BaseAddress = new Uri("https://autotime-api.azurewebsites.net/")
         };
     }
 }

@@ -22,7 +22,7 @@ namespace IntratimeMiddleware
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://autotime.azurewebsites.net");
+                                      policy.WithOrigins("https://autotime.azurewebsites.net");
                                   });
             });
 

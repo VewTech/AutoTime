@@ -14,19 +14,13 @@ namespace IntratimeMiddleware
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            // Allow cors
-            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
-
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  policy =>
-                                  {
-                                      policy.WithOrigins("https://autotime.azurewebsites.net");
-                                  });
-            });
+            builder.Services.AddCors();
 
             var app = builder.Build();
+
+            app.UseCors(
+                options => options.WithOrigins("https://autotime.azurewebsites.net").AllowAnyMethod()
+            );
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -34,8 +28,6 @@ namespace IntratimeMiddleware
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseCors();
 
 
             app.UseHttpsRedirection();

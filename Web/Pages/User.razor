@@ -19,13 +19,12 @@ Actualmente has iniciado sesión como @_cachedUsername
 
     // The data saved in the browser caché
     private string _cachedUsername = "";
-    private string _cachedPassword = "";
 
     // When the page loads, retrieve data from LocalStorageService
     protected async override void OnInitialized()
     {
         _cachedUsername = await LocalStorageService.GetItemAsStringAsync("username");
-        _cachedPassword = await LocalStorageService.GetItemAsStringAsync("password");
+        StateHasChanged();
     }
 
     // When the user tries to login, check credentials and save to LocalStorageService

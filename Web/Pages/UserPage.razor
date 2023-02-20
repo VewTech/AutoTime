@@ -23,11 +23,11 @@ Actualmente has iniciado sesión como @_cachedUsername
     // When the page loads, retrieve data from LocalStorageService
     protected async override void OnInitialized()
     {
-        _cachedUsername = await LocalStorageService.GetItemAsStringAsync("username");
+        _cachedUsername = await LocalStorage.GetUsername();
         StateHasChanged();
     }
 
-    // When the user tries to login, check credentials and save to LocalStorageService
+    // When the user tries to login, check credentials and, if correct, save to LocalStorageService
     private async void OnUserLogin()
     {
         var content = new FormUrlEncodedContent(new[]
@@ -38,9 +38,10 @@ Actualmente has iniciado sesión como @_cachedUsername
         var response = await Clients.IntratimeMiddlewareClient.PostAsync("user/login", content);
         if (response.IsSuccessStatusCode)
         {
-            await LocalStorageService.SetItemAsStringAsync("username", _newUsername);
-            await LocalStorageService.SetItemAsStringAsync("password", _newPassword);
+            await LocalStorage.SetUsername(_newUsername);
+            await LocalStorage.SetPassword(_newPassword);
             _cachedUsername = _newUsername;
+            StateHasChanged();
         }
     }
 }

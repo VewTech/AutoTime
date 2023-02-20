@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Web;
 using Blazored.LocalStorage;
+using Web.Core.Services;
 
 namespace Web
 {
@@ -16,6 +16,8 @@ namespace Web
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
             builder.Services.AddBlazoredLocalStorage(); // Add blazored local storage
+            
+            builder.Services.AddScoped<ILocalStorageHelper, LocalStorageHelper>(); // Add custom storage service
 
             await builder.Build().RunAsync();
         }

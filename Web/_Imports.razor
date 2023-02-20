@@ -8,4 +8,7 @@
 @using Microsoft.JSInterop
 @using Web
 @using Web.Shared
-@inject Blazored.LocalStorage.ILocalStorageService LocalStorageService
+@using Web.Core.Services
+@inject Blazored.LocalStorage.ILocalStorageService Serv
+@inject Core.Services.ILocalStorageHelper LocalStorage
+@inject NavigationManager Navigation

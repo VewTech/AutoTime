@@ -1,0 +1,51 @@
+﻿@using Library.Schemas
+
+@page "/schedules"
+
+<h3>Horarios</h3>
+
+<ul>
+    @foreach(var currentSchedule in Schedules)
+    {
+        <li>@currentSchedule.Name<button @onclick="(() => OnScheduleNavigated(currentSchedule))">VER</button></li>
+    }
+</ul>
+
+Nombre de nuevo horario: <input @bind="_newScheduleName"/><br />
+ <button @onclick="OnCreateNewScheduleButtonClicked">CREAR NUEVO</button>
+
+@code {
+    // Name of the schedule to be created
+    private string _newScheduleName  = "";
+
+    // List of schedules in the user data
+    private List<Schedule> Schedules { get; set; } = new();
+
+    // When the page loads
+    protected override async void OnInitialized()
+    {
+        await LoadSchedules();
+    }
+
+    // Load schedules that are saved in storage
+    private async Task LoadSchedules()
+    {
+        Schedules = await LocalStorage.GetSchedules();
+        StateHasChanged();
+    }
+
+    // When the user attempts to create a schedule
+    private async void OnCreateNewScheduleButtonClicked()
+    {
+        if (string.IsNullOrEmpty(_newScheduleName)) return;
+        var newSchedule = new Schedule(_newScheduleName);
+        await LocalStorage.AddSchedule(newSchedule);
+        await LoadSchedules();
+    }
+
+    // When the user attempts to navigate to a schedule details page
+    private void OnScheduleNavigated(Schedule schedule)
+    {
+        Navigation.NavigateTo($"schedules/{schedule.IdSchedule}");
+    }
+}

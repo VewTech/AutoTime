@@ -1,6 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using Library.Schemas;
-using Microsoft.AspNetCore.Components;
+
 
 namespace Web.Core.Services
 {
@@ -17,7 +17,9 @@ namespace Web.Core.Services
 
         // The list of user saved schedules
         public Task<List<Schedule>> GetSchedules();
+        public Task SetSchedules(List<Schedule> value);
         public Task AddSchedule(Schedule value);
         public Task<Schedule> GetScheduleById(Guid value);
+        public Task UpdateSchedule(Guid id, Schedule value);
     }
 }

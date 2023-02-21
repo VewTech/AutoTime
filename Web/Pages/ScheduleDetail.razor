@@ -46,8 +46,9 @@
     }
 
     // When the user attempts to save the clocking
-    private void OnSaveScheduleClicked()
+    private async void OnSaveScheduleClicked()
     {
-        
+        await LocalStorage.UpdateSchedule(_schedule.IdSchedule, _schedule);
+        Navigation.NavigateTo("schedules");
     }
 }

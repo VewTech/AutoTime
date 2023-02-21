@@ -11,6 +11,7 @@
         public Guid IdSchedule { get; set; }
         public string Name { get; set; }
         public List<ClockingAction> Clockings { get; set; } = new List<ClockingAction>();
+        public int MinutesVariation { get; set; }
     }
 
     public class ClockingAction

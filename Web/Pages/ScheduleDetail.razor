@@ -8,7 +8,7 @@
     @foreach(var currentClocking in _schedule.Clockings)
     {
         <li>
-            <input type="time" @bind="currentClocking.ScheduledTime"> - 
+            <input type="time" @bind="currentClocking.ScheduledTime" /> - 
             <select @bind="currentClocking.Action">
                 <option value="0">ENTRADA</option>
                 <option value="1">SALIDA</option>
@@ -18,6 +18,8 @@
         </li>
     }
 </ul>
+
+Variación (minutos): <input type="number" @bind="_schedule.MinutesVariation" /><br />
 
 <button @onclick="OnAddClockingClicked">AÑADIR ACCIÓN</button>
 <button @onclick="OnSaveScheduleClicked">GUARDAR HORARIO</button>

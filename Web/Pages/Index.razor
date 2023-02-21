@@ -66,5 +66,12 @@ Seleccionar horario:
         }
         _statusText = "AÚN NO SE HA DESARROLLADO. NO SE HA FICHADO, PERO LOS DATOS SON CORRECTOS.";
         StateHasChanged();
+
+        foreach(var currentClocking in selectedSchedule.Clockings)
+        {
+            await IntratimeService.SubmitClocking(currentClocking, user.USER_TOKEN);
+        }
+        _statusText = "CORRECTO. COMPRUEBE SUS FICHAJES.";
+        StateHasChanged();
     }
 }

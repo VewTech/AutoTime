@@ -17,5 +17,18 @@ namespace Web.Core.Services
             if (!response.IsSuccessStatusCode) throw new HttpRequestException($"Could not login. Reason: {response.StatusCode} - {response.ReasonPhrase} - {response.Content}");
             return await response.Content.ReadFromJsonAsync<User>();
         }
+
+        public async Task SubmitClocking(ClockingAction clockingAction, string token)
+        {
+            var dateTime = DateTime.Today + clockingAction.ScheduledTime.ToTimeSpan();
+            var content = new FormUrlEncodedContent(new[]
+            {
+                new KeyValuePair<string, string>("userAction", clockingAction.Action.ToString()),
+                new KeyValuePair<string, string>("timestamp", dateTime.ToString()),
+                new KeyValuePair<string, string>("token", token),
+                new KeyValuePair<string, string>("coordinates", "39.35564548706826, -0.4456134227862798")
+            });
+            await Clients.IntratimeMiddlewareClient.PostAsync("user/clocking", content);
+        }
     }
 }

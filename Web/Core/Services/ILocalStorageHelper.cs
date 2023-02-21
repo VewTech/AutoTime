@@ -18,5 +18,6 @@ namespace Web.Core.Services
         // The list of user saved schedules
         public Task<List<Schedule>> GetSchedules();
         public Task AddSchedule(Schedule value);
+        public Task<Schedule> GetScheduleById(Guid value);
     }
 }

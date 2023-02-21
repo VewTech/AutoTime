@@ -46,5 +46,14 @@ namespace Web.Core.Services
             cachedSchedules.Add(value);
             await LocalStorage.SetItemAsync("schedules", cachedSchedules);
         }
+        public async Task<Schedule> GetScheduleById(Guid value)
+        {
+            var schedules = await GetSchedules();
+            foreach(var currentSchedule in schedules)
+            {
+                if(currentSchedule.IdSchedule == value) return currentSchedule;
+            }
+            return null;
+        }
     }
 }

@@ -1,0 +1,29 @@
+﻿@using Library.Schemas
+
+@page "/schedules/{ScheduleId}"
+
+<h3><a href="schedules">Horario</a> > @_schedule.Name</h3>
+
+<ul>
+    @foreach(var currentClocking in _schedule.Clockings)
+    {
+        <li>@currentClocking</li>
+    }
+</ul>
+
+@code {
+    // The Guid parameter that determines the schedule that will be detailed
+    [Parameter]
+    public string ScheduleId { get; set; } = "";
+
+    // The schedule detailed in this page
+    private Schedule _schedule = new("PLACEHOLDER");
+
+    // When the page loads, retrieve the corresponding schedule from LocalStorage
+    protected async override void OnInitialized()
+    {
+        var scheduleId = new Guid(ScheduleId);
+        _schedule = await LocalStorage.GetScheduleById(scheduleId);
+        StateHasChanged();
+    }
+}

@@ -47,6 +47,7 @@ Seleccionar horario:
         if (string.IsNullOrEmpty(_selectedScheduleId))
         {
             _statusText = "DEBE SELECCIONAR UN HORARIO";
+            StateHasChanged();
             return;
         }
         var scheduleId = new Guid(_selectedScheduleId);
@@ -60,8 +61,10 @@ Seleccionar horario:
         if (!response.IsSuccessStatusCode)
         {
             _statusText = "NO SE HA PODIDO INICIAR SESIÓN EN INTRATIME";
+            StateHasChanged();
             return;
         }
         _statusText = "AÚN NO SE HA DESARROLLADO. NO SE HA FICHADO, PERO LOS DATOS SON CORRECTOS.";
+        StateHasChanged();
     }
 }

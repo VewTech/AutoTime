@@ -1,5 +1,67 @@
-﻿@page "/"
+﻿@using Library.Schemas
+@using Library
 
-<h1>Hello, world!</h1>
+@page "/"
 
-Welcome to your new app.
+<h1>AutoTime</h1>
+
+Usuario actual: @_cachedUsername<br />
+
+Seleccionar horario:
+<select @bind="_selectedScheduleId" required>
+    @foreach(var currentSchedule in _schedules)
+    {
+        <option value="">Seleccionar</option>
+        <option value="@currentSchedule.IdSchedule">@currentSchedule.Name</option>
+    }
+</select><br />
+
+<button @onclick="OnPerformClockingsClicked">FICHAR AHORA</button><br />
+
+@_statusText
+
+@code{
+    // The username the user saved, it will be displayed above
+    private string _cachedUsername = "";
+
+    // The schedules the user created/saved
+    private List<Schedule> _schedules = new();
+
+    // The selected schedule (Id as string)
+    private string _selectedScheduleId = "";
+
+    // The status text displayed
+    private string _statusText = "ESPERANDO FICHAJE...";
+
+    // When the page loads, retrieve data from storage
+    protected async override void OnInitialized()
+    {
+        _cachedUsername = await LocalStorage.GetUsername();
+        _schedules = await LocalStorage.GetSchedules();
+        StateHasChanged();
+    }
+
+    // When the user attempts to perform clockings
+    private async void OnPerformClockingsClicked()
+    {
+        if (string.IsNullOrEmpty(_selectedScheduleId))
+        {
+            _statusText = "DEBE SELECCIONAR UN HORARIO";
+            return;
+        }
+        var scheduleId = new Guid(_selectedScheduleId);
+        var selectedSchedule = await LocalStorage.GetScheduleById(scheduleId);
+        var content = new FormUrlEncodedContent(new[]
+        {
+            new KeyValuePair<string, string>("user", await LocalStorage.GetUsername()),
+            new KeyValuePair<string, string>("pin", await LocalStorage.GetPassword())
+    });
+        var response = await Clients.IntratimeMiddlewareClient.PostAsync("user/login", content);
+        if (!response.IsSuccessStatusCode)
+        {
+            _statusText = "NO SE HA PODIDO INICIAR SESIÓN EN INTRATIME";
+            return;
+        }
+        _statusText = "AÚN NO SE HA DESARROLLADO. NO SE HA FICHADO, PERO LOS DATOS SON CORRECTOS.";
+    }
+}

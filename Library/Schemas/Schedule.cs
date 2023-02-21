@@ -10,6 +10,14 @@
 
         public Guid IdSchedule { get; set; }
         public string Name { get; set; }
-        public List<Clocking> Clockings { get; set; }
+        public List<ClockingAction> Clockings { get; set; } = new List<ClockingAction>();
+        public int MinutesVariation { get; set; }
+    }
+
+    public class ClockingAction
+    {
+        public Guid IdClocking { get; set; }
+        public TimeOnly ScheduledTime { get; set; }
+        public int Action { get; set; }
     }
 }

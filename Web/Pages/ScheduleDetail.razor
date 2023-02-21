@@ -1,0 +1,57 @@
+﻿@using Library.Schemas
+
+@page "/schedules/{ScheduleId}"
+
+<h3><a href="schedules">Horario</a> > @_schedule.Name</h3>
+
+<ul>
+    @foreach(var currentClocking in _schedule.Clockings)
+    {
+        <li>
+            <input type="time" @bind="currentClocking.ScheduledTime" /> - 
+            <select @bind="currentClocking.Action">
+                <option value="0">ENTRADA</option>
+                <option value="1">SALIDA</option>
+                <option value="2">PAUSA</option>
+                <option value="3">VOLVER</option>
+            </select>
+        </li>
+    }
+</ul>
+
+Variación (minutos): <input type="number" @bind="_schedule.MinutesVariation" /><br />
+
+<button @onclick="OnAddClockingClicked">AÑADIR ACCIÓN</button>
+<button @onclick="OnSaveScheduleClicked">GUARDAR HORARIO</button>
+
+@code {
+    // The Guid parameter that determines the schedule that will be detailed
+    [Parameter]
+    public string ScheduleId { get; set; } = "";
+
+    // The schedule detailed in this page
+    private Schedule _schedule = new("PLACEHOLDER");
+
+    // When the page loads, retrieve the corresponding schedule from LocalStorage
+    protected async override void OnInitialized()
+    {
+        var scheduleId = new Guid(ScheduleId);
+        _schedule = await LocalStorage.GetScheduleById(scheduleId);
+        StateHasChanged();
+    }
+
+    // When the user attempts to add a clocking to the schedule
+    private void OnAddClockingClicked()
+    {
+        var newClockAction = new ClockingAction();
+        _schedule.Clockings.Add(newClockAction);
+        StateHasChanged();
+    }
+
+    // When the user attempts to save the clocking
+    private async void OnSaveScheduleClicked()
+    {
+        await LocalStorage.UpdateSchedule(_schedule.IdSchedule, _schedule);
+        Navigation.NavigateTo("schedules");
+    }
+}

@@ -40,11 +40,37 @@ namespace Web.Core.Services
             if (schedules == null) return new List<Schedule>();
             return schedules;
         }
+        public async Task SetSchedules(List<Schedule> value)
+        {
+            await LocalStorage.SetItemAsync("schedules", value);
+        }
         public async Task AddSchedule(Schedule value)
         {
             var cachedSchedules = await GetSchedules();
             cachedSchedules.Add(value);
             await LocalStorage.SetItemAsync("schedules", cachedSchedules);
+        }
+        public async Task<Schedule> GetScheduleById(Guid id)
+        {
+            var schedules = await GetSchedules();
+            foreach(var currentSchedule in schedules)
+            {
+                if(currentSchedule.IdSchedule == id) return currentSchedule;
+            }
+            return null;
+        }
+        public async Task UpdateSchedule(Guid id, Schedule value)
+        {
+            var schedules = await GetSchedules();
+            var index = 0;
+            foreach(var currentSchedule in schedules)
+            {
+                if(currentSchedule.IdSchedule != id) continue;
+                index = schedules.IndexOf(currentSchedule);
+                break;
+            }
+            schedules[index] = value;
+            await SetSchedules(schedules);
         }
     }
 }

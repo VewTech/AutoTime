@@ -1,6 +1,6 @@
 ﻿namespace Library.Schemas
 {
-    public class ClockingAction
+    public class Clocking
     {
         public int INOUT_ID { get; set; }
         public int INOUT_USER_ID { get; set; }

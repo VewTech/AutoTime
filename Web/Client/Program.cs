@@ -18,6 +18,7 @@ namespace Web
             builder.Services.AddBlazoredLocalStorage(); // Add blazored local storage
             
             builder.Services.AddScoped<ILocalStorageHelper, LocalStorageHelper>(); // Add custom storage service
+            builder.Services.AddScoped<IIntratimeService, IntratimeService>(); // Add custom intratime service
 
             await builder.Build().RunAsync();
         }

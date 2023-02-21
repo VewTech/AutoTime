@@ -30,18 +30,10 @@ Actualmente has iniciado sesión como @_cachedUsername
     // When the user tries to login, check credentials and, if correct, save to LocalStorageService
     private async void OnUserLogin()
     {
-        var content = new FormUrlEncodedContent(new[]
-        {
-            new KeyValuePair<string, string>("user", _newUsername),
-            new KeyValuePair<string, string>("pin", _newPassword)
-        });
-        var response = await Clients.IntratimeMiddlewareClient.PostAsync("user/login", content);
-        if (response.IsSuccessStatusCode)
-        {
-            await LocalStorage.SetUsername(_newUsername);
-            await LocalStorage.SetPassword(_newPassword);
-            _cachedUsername = _newUsername;
-            StateHasChanged();
-        }
+        await IntratimeService.LoginUser(_newUsername, _newPassword);
+        await LocalStorage.SetUsername(_newUsername);
+        await LocalStorage.SetPassword(_newPassword);
+        _cachedUsername = _newUsername;
+        StateHasChanged();
     }
 }

@@ -9,9 +9,9 @@ Usuario actual: @_cachedUsername<br />
 
 Seleccionar horario:
 <select @bind="_selectedScheduleId" required>
+    <option value="">Seleccionar</option>
     @foreach(var currentSchedule in _schedules)
     {
-        <option value="">Seleccionar</option>
         <option value="@currentSchedule.IdSchedule">@currentSchedule.Name</option>
     }
 </select><br />
@@ -52,17 +52,17 @@ Seleccionar horario:
         }
         var scheduleId = new Guid(_selectedScheduleId);
         var selectedSchedule = await LocalStorage.GetScheduleById(scheduleId);
-        var content = new FormUrlEncodedContent(new[]
+
+        User user;
+        try
         {
-            new KeyValuePair<string, string>("user", await LocalStorage.GetUsername()),
-            new KeyValuePair<string, string>("pin", await LocalStorage.GetPassword())
-    });
-        var response = await Clients.IntratimeMiddlewareClient.PostAsync("user/login", content);
-        if (!response.IsSuccessStatusCode)
+            user = await IntratimeService.LoginUser(await LocalStorage.GetUsername(), await LocalStorage.GetPassword());
+        }
+        catch
         {
             _statusText = "NO SE HA PODIDO INICIAR SESIÓN EN INTRATIME";
             StateHasChanged();
-            return;
+            throw;
         }
         _statusText = "AÚN NO SE HA DESARROLLADO. NO SE HA FICHADO, PERO LOS DATOS SON CORRECTOS.";
         StateHasChanged();

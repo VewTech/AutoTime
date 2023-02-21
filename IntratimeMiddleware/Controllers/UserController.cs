@@ -27,17 +27,19 @@ namespace IntratimeMiddleware.Controllers
 
         // Post a clocking using the user token
         [HttpPost("clocking")]
-        public void PostClocking(int userAction, DateTime timestamp, string coordinates, string token)
+        public void PostClocking(string userAction, string timestamp, string coordinates, string token)
         {
+            var httpRequest = new HttpRequestMessage(HttpMethod.Post, "user/clocking");
+            var a = userAction.ToString();
             var content = new FormUrlEncodedContent(new[]
             {
-                new KeyValuePair<string, string>("user_action", userAction.ToString()),
-                new KeyValuePair<string, string>("user_timestamp", timestamp.ToString()),
-                new KeyValuePair<string, string>("user_gps_coordinates", coordinates)
+                new KeyValuePair<string, string>("user_action", userAction),
+                new KeyValuePair<string, string>("user_timestamp", timestamp),
             });
-
-            Clients.IntratimeClient.DefaultRequestHeaders.Add("token", token);
-            Clients.IntratimeClient.PostAsync("user/clocking", content);
+            httpRequest.Headers.Add("token", token);
+            httpRequest.Content = content;
+            var response = Clients.IntratimeClient.SendAsync(httpRequest).Result;
+            if (!response.IsSuccessStatusCode) throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
         }
     }
 }

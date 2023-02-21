@@ -21,13 +21,14 @@ namespace Web.Core.Services
         public async Task SubmitClocking(ClockingAction clockingAction, string token)
         {
             var dateTime = DateTime.Today + clockingAction.ScheduledTime.ToTimeSpan();
-            var content = new FormUrlEncodedContent(new[]
+            var data = new[]
             {
                 new KeyValuePair<string, string>("userAction", clockingAction.Action.ToString()),
-                new KeyValuePair<string, string>("timestamp", dateTime.ToString()),
+                new KeyValuePair<string, string>("timestamp", dateTime.ToString("yyyy'-'MM'-'dd HH':'mm':'ss")),
                 new KeyValuePair<string, string>("token", token),
                 new KeyValuePair<string, string>("coordinates", "39.35564548706826, -0.4456134227862798")
-            });
+            };
+            var content = new FormUrlEncodedContent(data);
             await Clients.IntratimeMiddlewareClient.PostAsync("user/clocking", content);
         }
     }

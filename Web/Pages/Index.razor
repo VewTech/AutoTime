@@ -65,6 +65,9 @@ Seleccionar horario:
             throw;
         }
 
+        _statusText = "PROCESANDO... NO VUELVA A PULSAR EL BOTÓN";
+        StateHasChanged();
+
         foreach(var currentClocking in selectedSchedule.Clockings)
         {
             await IntratimeService.SubmitClocking(currentClocking, user.USER_TOKEN);

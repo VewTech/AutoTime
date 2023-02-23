@@ -68,9 +68,11 @@ Seleccionar horario:
         _statusText = "PROCESANDO... NO VUELVA A PULSAR EL BOTÓN";
         StateHasChanged();
 
+        var random = new Random();
         foreach(var currentClocking in selectedSchedule.Clockings)
         {
-            await IntratimeService.SubmitClocking(currentClocking, user.USER_TOKEN);
+            var variation = random.Next(selectedSchedule.MinutesVariation * 60);
+            await IntratimeService.SubmitClocking(currentClocking, user.USER_TOKEN, variation);
         }
         _statusText = "CORRECTO. COMPRUEBE SUS FICHAJES.";
         StateHasChanged();

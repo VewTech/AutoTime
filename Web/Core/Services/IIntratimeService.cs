@@ -8,6 +8,6 @@ namespace Web.Core.Services
         public Task<User> LoginUser(string user, string pin);
 
         // Submit a clocking
-        public Task SubmitClocking(ClockingAction clockingAction, string token, int variation);
+        public Task SubmitClocking(ClockingAction clockingAction, string token, int variation, DateTime date);
     }
 }

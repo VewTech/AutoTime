@@ -18,9 +18,9 @@ namespace Web.Core.Services
             return await response.Content.ReadFromJsonAsync<User>();
         }
 
-        public async Task SubmitClocking(ClockingAction clockingAction, string token, int variation)
+        public async Task SubmitClocking(ClockingAction clockingAction, string token, int variation, DateTime date)
         {
-            var dateTime = (DateTime.Today + clockingAction.ScheduledTime.ToTimeSpan()).AddSeconds(variation);
+            var dateTime = (date + clockingAction.ScheduledTime.ToTimeSpan()).AddSeconds(variation);
             var data = new[]
             {
                 new KeyValuePair<string, string>("userAction", clockingAction.Action.ToString()),

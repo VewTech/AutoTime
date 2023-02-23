@@ -16,6 +16,9 @@ Seleccionar horario:
     }
 </select><br />
 
+SELECCIONAR FECHA <input type="date" @bind="_chosenDate"/>
+<br />
+
 <button @onclick="OnPerformClockingsClicked">FICHAR AHORA</button><br />
 
 @_statusText
@@ -32,6 +35,9 @@ Seleccionar horario:
 
     // The status text displayed
     private string _statusText = "ESPERANDO FICHAJE...";
+
+    // The date the user chose for the clocking
+    private DateTime _chosenDate = DateTime.Today;
 
     // When the page loads, retrieve data from storage
     protected async override void OnInitialized()
@@ -72,7 +78,7 @@ Seleccionar horario:
         foreach(var currentClocking in selectedSchedule.Clockings)
         {
             var variation = random.Next(selectedSchedule.MinutesVariation * 60);
-            await IntratimeService.SubmitClocking(currentClocking, user.USER_TOKEN, variation);
+            await IntratimeService.SubmitClocking(currentClocking, user.USER_TOKEN, variation, _chosenDate);
         }
         _statusText = "CORRECTO. COMPRUEBE SUS FICHAJES.";
         StateHasChanged();

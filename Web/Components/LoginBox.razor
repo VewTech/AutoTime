@@ -20,17 +20,17 @@
 @code {
 
     /// <summary>
-    /// The schema object containing the login information
+    /// The schema object containing the login information.
     /// </summary>
     private UserLogin _myUserLogin = new();
 
     /// <summary>
-    /// The event that will be fired when the form is submitted
+    /// The event that will be fired when the form is submitted.
     /// </summary>
     [Parameter] public EventCallback<UserLogin> OnSubmitted { get; set; }
 
     /// <summary>
-    /// The method that fires the OnSubmitted event with the UserLogin parameter
+    /// The method that fires the OnSubmitted event with the UserLogin parameter.
     /// </summary>
     private async void OnSubmitButtonClicked()
     {

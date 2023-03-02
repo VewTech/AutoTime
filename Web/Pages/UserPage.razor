@@ -1,22 +1,15 @@
 ﻿ @using Library
+@using Library.Schemas;
 
 @page "/user"
 
 <h3>Usuario</h3>
 
-<p>Utiliza tus credenciales de intratime para iniciar sesión en el servicio</p>
+<Web.Components.LoginBox OnSubmitted="OnUserLogin"></Web.Components.LoginBox>
 
-Nombre de usuario (correo): <input @bind="_newUsername"/><br />
-Contraseña: <input type="password" @bind="_newPassword" /><br />
-<button @onclick="OnUserLogin">CONFIRMAR</button><br />
-
-Actualmente has iniciado sesión como @_cachedUsername
+<p>Actualmente has iniciado sesión como @_cachedUsername</p>
 
 @code {
-    // The data the user interacts with in the form
-    private string _newUsername = "";
-    private string _newPassword = "";
-
     // The data saved in the browser caché
     private string _cachedUsername = "";
 
@@ -28,12 +21,12 @@ Actualmente has iniciado sesión como @_cachedUsername
     }
 
     // When the user tries to login, check credentials and, if correct, save to LocalStorageService
-    private async void OnUserLogin()
+    private async void OnUserLogin(UserLogin userLogin)
     {
-        await IntratimeService.LoginUser(_newUsername, _newPassword);
-        await LocalStorage.SetUsername(_newUsername);
-        await LocalStorage.SetPassword(_newPassword);
-        _cachedUsername = _newUsername;
+        await IntratimeService.LoginUser(userLogin.Email, userLogin.Password);
+        await LocalStorage.SetUsername(userLogin.Email);
+        await LocalStorage.SetPassword(userLogin.Password);
+        _cachedUsername = userLogin.Email;
         StateHasChanged();
     }
 }

@@ -32,8 +32,9 @@
     /// <summary>
     /// The method that fires the OnSubmitted event with the UserLogin parameter.
     /// </summary>
-    private async void OnSubmitButtonClicked()
+    private async void OnSubmitButtonClicked(EditContext editContext)
     {
+        if (!editContext.Validate()) return;
         await OnSubmitted.InvokeAsync(_myUserLogin);
     }
 }

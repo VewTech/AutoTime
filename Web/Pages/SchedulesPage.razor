@@ -11,12 +11,25 @@
     }
 </ul>
 
-Nombre de nuevo horario: <input @bind="_newScheduleName"/><br />
- <button @onclick="OnCreateNewScheduleButtonClicked">CREAR NUEVO</button>
+<EditForm
+    Model="_newSchedule"
+    OnValidSubmit="OnCreateNewScheduleButtonClicked">
+    
+    <label for="scheduleName">Nombre de nuevo horario: </label>
+    <InputText @bind-Value="_newSchedule.Name" />
+
+    <br />
+
+    <input type="submit" value="CREAR NUEVO"/>
+
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+</EditForm>
 
 @code {
     // Name of the schedule to be created
-    private string _newScheduleName  = "";
+    private Schedule _newSchedule = new();
 
     // List of schedules in the user data
     private List<Schedule> Schedules { get; set; } = new();
@@ -37,9 +50,7 @@ Nombre de nuevo horario: <input @bind="_newScheduleName"/><br />
     // When the user attempts to create a schedule
     private async void OnCreateNewScheduleButtonClicked()
     {
-        if (string.IsNullOrEmpty(_newScheduleName)) return;
-        var newSchedule = new Schedule(_newScheduleName);
-        await LocalStorage.AddSchedule(newSchedule);
+        await LocalStorage.AddSchedule(_newSchedule);
         await LoadSchedules();
     }
 

@@ -1,0 +1,61 @@
+﻿@using Library.Schemas;
+
+<h3><a href="schedules">Horarios</a> > @Schedule.Name</h3>
+
+<EditForm
+    Model="Schedule"
+    OnValidSubmit="OnSubmitted">
+
+    <ul>
+        @foreach (var currentClocking in Schedule.Clockings)
+        {
+            <li>
+                <input type="time" @bind=@currentClocking.ScheduledTime />
+                <InputSelect @bind-Value="currentClocking.Action">
+                    <option value="0">ENTRADA</option>
+                    <option value="1">SALIDA</option>
+                    <option value="2">PAUSA</option>
+                    <option value="3">VOLVER</option>
+                </InputSelect>
+            </li>
+        }
+    </ul>
+
+    <br />
+
+    <label for="minutesVariation">Variación (minutos):</label>
+    <InputNumber @bind-Value="Schedule.MinutesVariation"></InputNumber>
+
+    <br />
+
+    <input type="submit" value="GUARDAR HORARIO" />
+
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+</EditForm>
+
+<button @onclick="OnAddClockingClicked">AÑADIR ACCIÓN</button>
+
+@code {
+
+    /// <summary>
+    /// The schedule that will be loaded to be edited.
+    /// </summary>
+    [Parameter, EditorRequired] public required Schedule Schedule { get; set; }
+
+    /// <summary>
+    /// The event that will be fired when the user clicks the "Save" button.
+    /// </summary>
+    [Parameter] public EventCallback OnSubmitted { get; set; }
+
+    /// <summary>
+    /// When the user attempts to add a clocking to the schedule.
+    /// </summary>
+    private void OnAddClockingClicked()
+    {
+        var newClockAction = new ClockingAction();
+        Schedule.Clockings.Add(newClockAction);
+        StateHasChanged();
+    }
+}
